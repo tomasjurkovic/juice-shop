@@ -9,6 +9,8 @@ const loginPage_PO = new LoginPage_PO();
 const registerPage_PO = new RegisterPage_PO();
 
 describe("Juice Shop Login tests", () => {
+  const email = Math.random().toString(35) + "tomas@jurkovic.sk";
+  const password = "strongP@$$w0rd";
   before(() => {
     cy.fixture("example").then(function (data) {
       globalThis.data = data;
@@ -24,9 +26,9 @@ describe("Juice Shop Login tests", () => {
     mainPage_PO.goToCreateNewAccountPage();
     loginPage_PO.registerNewCustomer();
     registerPage_PO.fillRegisterInputFormValid(
-      "tomas@jurkovic.sk",
-      "strongP@$$w0rd",
-      " Name of your favorite pet?",
+      email,
+      password,
+      "Your eldest siblings middle name?",
       "Chelsea"
     );
     registerPage_PO.submitRegisterNewAccountForm();
