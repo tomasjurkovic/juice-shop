@@ -41,4 +41,18 @@ describe("Juice Shop Login tests", () => {
     mainPage_PO.verifyUserIsLoggedIn(email);
     mainPage_PO.logout();
   });
+
+  it("Login with API", () => {
+    cy.request({
+      method: "POST",
+      url: "http://localhost:3000/rest/user/login",
+      body: {
+        email: email,
+        password: password,
+      },
+    }).then((response) => {
+      expect(response.status).to.eql(200);
+      expect(response.body.authentication.umail).to.eql(email);
+    });
+  });
 });
