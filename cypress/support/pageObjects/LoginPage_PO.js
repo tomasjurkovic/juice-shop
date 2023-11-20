@@ -4,6 +4,7 @@ class LoginPage_PO {
     this.passwordInput = "#password";
     this.registerNewCustomerBtnLink = "a[href*='#/register']";
     this.successfullRegisterToolbar = ".mat-simple-snack-bar-content";
+    this.loginBtn = "#loginButton";
   }
 
   // commands:
@@ -15,6 +16,12 @@ class LoginPage_PO {
     cy.get(this.successfullRegisterToolbar)
       .invoke("text")
       .should("include", "Registration completed successfully");
+  }
+
+  loginWithCredentials(email, password) {
+    cy.get(this.emailInput).type(email);
+    cy.get(this.passwordInput).type(password);
+    cy.get(this.loginBtn).click({ force: true });
   }
 }
 
