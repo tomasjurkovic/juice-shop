@@ -3,6 +3,9 @@ class MainPage_PO {
     this.accountBtn = "#navbarAccount";
     this.loginBtn = "#navbarLoginButton";
     this.cancelModalBtn = ".close-dialog";
+    this.userProfilListItem =
+      '.mat-menu-content > [aria-label="Go to user profile"]';
+    this.logoutBtn = "#navbarLogoutButton";
   }
 
   // commands:
@@ -10,9 +13,18 @@ class MainPage_PO {
     cy.get(this.cancelModalBtn).click();
   }
 
-  goToCreateNewAccountPage() {
+  goToLoginPage() {
     cy.get(this.accountBtn).click();
     cy.get(this.loginBtn).click();
+  }
+
+  verifyUserIsLoggedIn(email) {
+    cy.get(this.accountBtn).click();
+    cy.get(this.userProfilListItem).invoke("text").should("include", email);
+  }
+
+  logout() {
+    cy.get(this.logoutBtn).click({ force: true });
   }
 }
 

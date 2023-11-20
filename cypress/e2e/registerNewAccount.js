@@ -23,7 +23,7 @@ describe("Juice Shop Login tests", () => {
   });
 
   it("Register new account", () => {
-    mainPage_PO.goToCreateNewAccountPage();
+    mainPage_PO.goToLoginPage();
     loginPage_PO.registerNewCustomer();
     registerPage_PO.fillRegisterInputFormValid(
       email,
@@ -33,5 +33,12 @@ describe("Juice Shop Login tests", () => {
     );
     registerPage_PO.submitRegisterNewAccountForm();
     loginPage_PO.checkNewAccountWasCreatedSuccessfully();
+  });
+
+  it("Login with newly created account", () => {
+    mainPage_PO.goToLoginPage();
+    loginPage_PO.loginWithCredentials(email, password);
+    mainPage_PO.verifyUserIsLoggedIn(email);
+    mainPage_PO.logout();
   });
 });
