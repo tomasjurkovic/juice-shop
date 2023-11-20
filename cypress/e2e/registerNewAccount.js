@@ -32,5 +32,6 @@ describe("Juice Shop Login tests", () => {
       "Chelsea"
     );
     registerPage_PO.submitRegisterNewAccountForm();
+    loginPage_PO.checkNewAccountWasCreatedSuccessfully();
   });
 });
