@@ -11,48 +11,53 @@ const registerPage_PO = new RegisterPage_PO();
 describe("Juice Shop Login tests", () => {
   const email = Math.random().toString(35) + "tomas@jurkovic.sk";
   const password = "strongP@$$w0rd";
-  before(() => {
-    cy.fixture("example").then(function (data) {
-      globalThis.data = data;
+
+  describe("UI tests", () => {
+    before(() => {
+      cy.fixture("example").then(function (data) {
+        globalThis.data = data;
+      });
+    });
+
+    beforeEach(() => {
+      cy.visit("/");
+      mainPage_PO.hideModalWindow();
+    });
+
+    it("Register new account", () => {
+      mainPage_PO.goToLoginPage();
+      loginPage_PO.registerNewCustomer();
+      registerPage_PO.fillRegisterInputFormValid(
+        email,
+        password,
+        "Your eldest siblings middle name?",
+        "Chelsea"
+      );
+      registerPage_PO.submitRegisterNewAccountForm();
+      loginPage_PO.checkNewAccountWasCreatedSuccessfully();
+    });
+
+    it("Login with newly created account", () => {
+      mainPage_PO.goToLoginPage();
+      loginPage_PO.loginWithCredentials(email, password);
+      mainPage_PO.verifyUserIsLoggedIn(email);
+      mainPage_PO.logout();
     });
   });
 
-  beforeEach(() => {
-    cy.visit("/");
-    mainPage_PO.hideModalWindow();
-  });
-
-  it("Register new account", () => {
-    mainPage_PO.goToLoginPage();
-    loginPage_PO.registerNewCustomer();
-    registerPage_PO.fillRegisterInputFormValid(
-      email,
-      password,
-      "Your eldest siblings middle name?",
-      "Chelsea"
-    );
-    registerPage_PO.submitRegisterNewAccountForm();
-    loginPage_PO.checkNewAccountWasCreatedSuccessfully();
-  });
-
-  it("Login with newly created account", () => {
-    mainPage_PO.goToLoginPage();
-    loginPage_PO.loginWithCredentials(email, password);
-    mainPage_PO.verifyUserIsLoggedIn(email);
-    mainPage_PO.logout();
-  });
-
-  it("Login with API", () => {
-    cy.request({
-      method: "POST",
-      url: "http://localhost:3000/rest/user/login",
-      body: {
-        email: email,
-        password: password,
-      },
-    }).then((response) => {
-      expect(response.status).to.eql(200);
-      expect(response.body.authentication.umail).to.eql(email);
+  describe("API tests", () => {
+    it("Login with API", () => {
+      cy.request({
+        method: "POST",
+        url: "http://localhost:3000/rest/user/login",
+        body: {
+          email: email,
+          password: password,
+        },
+      }).then((response) => {
+        expect(response.status).to.eql(200);
+        expect(response.body.authentication.umail).to.eql(email);
+      });
     });
   });
 });
