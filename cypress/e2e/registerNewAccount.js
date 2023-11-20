@@ -46,6 +46,7 @@ describe("Juice Shop Login tests", () => {
   });
 
   describe("API tests", () => {
+    let token;
     it("Login with API", () => {
       const userCredentials = {
         email: email,
@@ -58,7 +59,15 @@ describe("Juice Shop Login tests", () => {
       ).then((response) => {
         expect(response.status).to.eql(200);
         expect(response.body.authentication.umail).to.eql(email);
+        cy.log(response.body.authentication.token);
+        token = response.body.authentication.token;
+        cy.log(token);
       });
+    });
+
+    it("Different Test to check if token is available", () => {
+      cy.log(token);
+      expect(token.length).to.be.greaterThan(10);
     });
   });
 });
