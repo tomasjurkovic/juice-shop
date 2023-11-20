@@ -47,11 +47,18 @@ describe("Juice Shop Login tests", () => {
 
   describe("API tests", () => {
     let token;
+    const userCredentials = {
+      email: email,
+      password: password,
+    };
+
+    before(() => {
+      cy.fixture("example").then(function (data) {
+        globalThis.data = data;
+      });
+    });
+
     it("Login with API", () => {
-      const userCredentials = {
-        email: email,
-        password: password,
-      };
       cy.request(
         "POST",
         "http://localhost:3000/rest/user/login",
@@ -68,6 +75,32 @@ describe("Juice Shop Login tests", () => {
     it("Different Test to check if token is available", () => {
       cy.log(token);
       expect(token.length).to.be.greaterThan(10);
+    });
+
+    it("Login via Token (non UI}", () => {
+      cy.request(
+        "POST",
+        "http://localhost:3000/rest/user/login",
+        userCredentials
+      )
+        .its("body")
+        .then((body) => {
+          const tokenExtracted = body.authentication.token;
+          cy.wrap(tokenExtracted).as("userToken");
+          cy.log("@userToken");
+
+          const userToken = cy.get("@userToken");
+          cy.visit("/", {
+            onBeforeLoad(browser) {
+              browser.localStorage.setItem("token", userToken);
+            },
+          });
+
+          // verify it exists:
+          cy.wait(3000);
+          cy.get(".close-dialog").click({ force: true });
+          cy.get(".fa-layers-counter").contains(0);
+        });
     });
   });
 });
