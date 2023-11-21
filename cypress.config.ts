@@ -7,5 +7,6 @@ export default defineConfig({
     },
     specPattern: "cypress/e2e/**/*.js",
     baseUrl: "http://localhost:3000/#/",
+    experimentalStudio: true,
   },
 });
